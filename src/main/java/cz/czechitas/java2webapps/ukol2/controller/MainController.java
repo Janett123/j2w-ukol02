@@ -13,19 +13,17 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static java.nio.file.Files.readAllLines;
-
 @Controller
 public class MainController {
 
-    private static List<String> readAllLines(String resource)throws IOException {
+    private static List<String> readAllLines(String resource) throws IOException {
         //Soubory z resources se získávají pomocí classloaderu. Nejprve musíme získat aktuální classloader.
-        ClassLoader classLoader=Thread.currentThread().getContextClassLoader();
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
         //Pomocí metody getResourceAsStream() získáme z classloaderu InpuStream, který čte z příslušného souboru.
         //Následně InputStream převedeme na BufferedRead, který čte text v kódování UTF-8
-        try(InputStream inputStream=classLoader.getResourceAsStream(resource);
-            BufferedReader reader=new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))){
+        try (InputStream inputStream = classLoader.getResourceAsStream(resource);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 
             //Metoda lines() vrací stream řádků ze souboru. Pomocí kolektoru převedeme Stream<String> na List<String>.
             return reader
@@ -40,10 +38,11 @@ public class MainController {
     @GetMapping("/")
     public ModelAndView zobrazCitat() throws IOException {      //výjimku požadovala ID u realAllLines//
 
-        int nahodneCislo = random.nextInt(6);
+        int nahodneCislo = random.nextInt(7);
 
         ModelAndView result = new ModelAndView("index");
-            result.addObject("citat", readAllLines("citaty.txt").get(nahodneCislo));
+        result.addObject("citat", readAllLines("citaty.txt").get(nahodneCislo));
+        result.addObject("obrazek", readAllLines("obrazky_k_citatum.txt").get(nahodneCislo));
 
         return result;
 
